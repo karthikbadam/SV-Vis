@@ -29,7 +29,7 @@ function computeMatrix(n, m) {
 
     var possibilites = Math.pow(m, n);
 
-    var randomVector = new Array(n);
+    
 
     if (isEven(n)) {
 
@@ -55,14 +55,16 @@ function computeMatrix(n, m) {
 
         for (var j = 0; j < matrixCols; j++) {
 
-            var index = i * matrixRows + j;
+            var index = i * matrixCols + j;
 
             var sum = 0;
+            
+            var randomVector = new Array(n);
 
             // Check for the variables
             for (var k = 0; k < n; k++) {
 
-                var temp = Math.floor(index / Math.pow(m, k+1));
+                var temp = Math.floor(index / Math.pow(m, k));
 
                 //filling in inverse way
                 if (isEven(temp)) {
@@ -80,6 +82,7 @@ function computeMatrix(n, m) {
             matrix[i][j] = {
                 x: j,
                 y: i,
+                vector: randomVector,
                 value: sum
             };
 
@@ -89,74 +92,130 @@ function computeMatrix(n, m) {
     return matrix;
 }
 
+function vectorToText(vector) {
+
+    var text = "";
+
+    for (var i = 0; i < NUMBER_OF_VARIABLES; i++) {
+
+        if (vector[i] == 1) {
+            
+            if (i == NUMBER_OF_VARIABLES - 1) {
+                
+                text += variableNames[i];
+                
+            } else {
+                
+                text += variableNames[i] + " : ";   
+                
+            }
+        }
+
+    }
+    
+    return text;
+
+}
+
 $(document).ready(function () {
 
-    var matrix = computeMatrix(NUMBER_OF_VARIABLES, NUMBER_OF_POSSIBILITIES);
+            var matrix = computeMatrix(NUMBER_OF_VARIABLES, NUMBER_OF_POSSIBILITIES);
 
-    console.log(matrix);
+            console.log(matrix);
 
-    deviceWidth = $(document).width();
-    deviceHeight = $(document).height();
+            deviceWidth = $(document).width();
+            deviceHeight = $(document).height();
 
-    var margin = {
-        left: 10,
-        top: 10,
-        right: 10,
-        bottom: 10
-    };
+            var margin = {
+                left: 400,
+                top: 10,
+                right: 10,
+                bottom: 10
+            };
 
-    var width = deviceWidth * 0.99 - margin.left - margin.right;
-    var height = deviceHeight * 0.9 - margin.top - margin.bottom;
+            var width = deviceWidth * 0.99 - margin.left - margin.right;
+            var height = deviceHeight * 0.9 - margin.top - margin.bottom;
 
-    var cellWidth = width / matrixRows;
-    var cellHeight = height / matrixCols;
+            var cellWidth = width < height ? width / matrixCols : height / matrixRows;
 
-    var svg = d3.select("body").append("svg")
-        .attr("id", "cVis")
-        .attr("class", "hierarchial")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-    var x = d3.scale.linear().range([0, width]);
-    var y = d3.scale.linear().range([0, height]);
-
-    x.domain([0, matrixCols - 1]);
-    y.domain([0, matrixRows - 1]);
-
-    var row = svg.selectAll(".row")
-        .data(matrix)
-        .enter().append("g")
-        .attr("class", "row")
-        .each(row);
+            var svg = d3.select("body").append("svg")
+                .attr("id", "cVis")
+                .attr("class", "hierarchial")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-    function row(row) {
-        var cell = d3.select(this).selectAll(".cell")
-            .data(row.filter(function (d) {
-                return d.value;
-            }))
-            .enter().append("rect")
-            .attr("class", "cell")
-            .attr("x", function (d) {
-                return 50*d.x;
-            })
-            .attr("y", function (d) {
-                return 50*d.y;
-            })
-            .attr("width", 50)
-            .attr("height", 50)
-            .style("fill-opacity", function (d) {
-                return 1;
-            })
-            .style("fill", function (d) {
-                return color(d.value);
+            var x = d3.scale.linear().range([0, width]);
+            var y = d3.scale.linear().range([0, height]);
+
+            x.domain([0, matrixCols - 1]);
+            y.domain([0, matrixRows - 1]);
+
+            var row = svg.selectAll(".row")
+                .data(matrix)
+                .enter().append("g")
+                .attr("class", "row")
+                .each(row);
+
+
+            function row(row) {
+                var cell = d3.select(this).selectAll(".cell")
+                    .data(row.filter(function (d) {
+                        return d.value;
+                    }))
+                    .enter().append("rect")
+                    .attr("class", "cell")
+                    .attr("x", function (d) {
+                        return cellWidth * d.x;
+                    })
+                    .attr("y", function (d) {
+                        return cellWidth * d.y;
+                    })
+                    .attr("width", cellWidth)
+                    .attr("height", cellWidth)
+                    .style("fill-opacity", function (d) {
+                        return 1;
+                    })
+                    .style("fill", function (d) {
+                        return color(d.value);
+                    })
+                    .style("stroke", function (d) {
+                        return "white";
+                    })
+                    .style("stroke-size", function (d) {
+                        return "0.5px";
+                    })
+                    .append("title")
+                    .text(function (d) {
+
+                        return vectorToText(d.vector);
+
+                    });
+
+            }
+
+
+            function mouseover(p) {
+
+
+            }
+
+
+            //now drawing each text
+            for (var i = 0; i < NUMBER_OF_VARIABLES; i++) {
+                if (isEven(i)) {
+
+                    var index = Math.floor(i); 
+                        //add text in y
+
+                    } else {
+
+                        //add text in x
+
+
+                    }
+                }
+
             });
-    }
-
-    
-
-
-});
