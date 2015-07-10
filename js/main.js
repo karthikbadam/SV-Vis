@@ -11,7 +11,7 @@ var variableNames = ["Conference paper", "Student Volunteer at VIS", "Poster/D.C
 
 var color = d3.scale.linear()
     .domain([0, 20])
-    .range(["white", "SteelBlue"])
+    .range(["white", "steelblue"])
     .interpolate(d3.interpolateLab);
 
 
@@ -26,8 +26,6 @@ function isEven(n) {
 }
 
 function computeMatrix(n, m) {
-
-
 
     var possibilites = Math.pow(m, n);
 
@@ -64,7 +62,7 @@ function computeMatrix(n, m) {
             // Check for the variables
             for (var k = 0; k < n; k++) {
 
-                var temp = Math.floor(index / Math.pow(m, k));
+                var temp = Math.floor(index / Math.pow(m, k+1));
 
                 //filling in inverse way
                 if (isEven(temp)) {
