@@ -2,7 +2,7 @@ var deviceWidth, deviceHeight;
 
 var matrixRows, matrixCols;
 
-var NUMBER_OF_VARIABLES = 7;
+var NUMBER_OF_VARIABLES = 6;
 var NUMBER_OF_POSSIBILITIES = 2;
 
 var weights = [5, 4, 3, 3, 2, 2, 1];
@@ -11,7 +11,7 @@ var variableNames = ["Conference paper", "Student Volunteer at VIS", "Poster/D.C
 
 var color = d3.scale.linear()
     .domain([0, 20])
-    .range(["white", "steelblue"])
+    .range(["pink", "steelblue"])
     .interpolate(d3.interpolateLab);
 
 
