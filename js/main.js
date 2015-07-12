@@ -14,8 +14,6 @@ var color = d3.scale.linear()
     .range(["red", "white", "green"])
     .interpolate(d3.interpolateLab);
 
-
-
 //    .range(d3.range(21).map(d3.scale.linear()
 //        .domain([0, 20])
 //        .range(["#f7fbff", "#08306b"])
